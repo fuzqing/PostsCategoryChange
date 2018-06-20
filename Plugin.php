@@ -11,6 +11,12 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
 {
     /**
+     * 插件版本号
+     * @var string
+     */
+    const _VERSION = '0.0.1';
+    
+    /**
      * 激活插件方法,如果激活失败,直接抛出异常
      *
      * @access public
