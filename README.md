@@ -9,6 +9,9 @@
 > 1.  由于Typecho 文章管理页面(“admin/manage-posts.php”)，没有提供插件点，启用之前请自己在“admin/manage-posts.php”文件里添加一个插件钩子。
 > 2. 看图
 ![添加插件钩子](https://huangweitong.com/usr/uploads/2018/06/1366006123.png)
+```php
+Typecho_Plugin::factory('admin/manage-posts.php')->bottom();
+```
 > 3. 在批量更新文章分类的时候，请先确认**被操作的文章是否都只能有一个分类。**
 > 4. 如果有个别文章存在多个分类的请手工修改分类，不要使用本插件。
 
