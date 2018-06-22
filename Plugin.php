@@ -1,9 +1,9 @@
 <?php
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
- * PostsCategoryChange
+ * 批量更改文章分类
  *
- * @package 批量更改文章分类
+ * @package PostsCategoryChange
  * @author Fuzqing
  * @version 0.0.1
  * @link https://huangweitong.com
