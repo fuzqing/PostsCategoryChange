@@ -1,4 +1,4 @@
-# Typecho 批量更改文章分类插件 PostsCategoryChange
+# Typecho 批量更改文章分类状态插件 PostsCategoryChange
 
 ## 插件简介
 
