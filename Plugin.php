@@ -25,7 +25,7 @@ class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
     public static function activate()
     {
         Helper::addAction('imanage-posts', 'PostsCategoryChange_Action');
-        Typecho_Plugin::factory('admin/manage-posts.php')->bottom = array(__CLASS__, 'render');
+        Typecho_Plugin::factory('admin/footer.php')->end = array(__CLASS__, 'render');
     }
 
     /**
@@ -67,6 +67,16 @@ class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
      */
     public static function render()
     {
+        // 判断页面 add by https://github.com/benzBrake 
+        $url = $_SERVER['REQUEST_URI'];
+        
+        $filename = substr( $url , strrpos($url , '/')+1);
+        
+        if (strpos("manage-posts.php", $filename) === false) {
+            
+            return;
+        }
+        
         $db = Typecho_Db::get();
 
         $prefix = $db->getPrefix();
@@ -76,7 +86,7 @@ class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
         $category_list = $db->fetchAll($db->select()->from($prefix.'metas')->where('type = ?', 'category'));
         //批量更改文章分类接收的action地址
         $makeChange_url = Typecho_Common::url('/index.php/action/imanage-posts?do=change-category', $options->siteUrl);
-        //批量更改文章分类接收的action地址
+        //批量更改文章状态接收的action地址
         $changeStatus_url = Typecho_Common::url('/index.php/action/imanage-posts?do=change-status', $options->siteUrl);
 
         $category_html = '<select name="icategory" id="category" style="width: 100%">';
@@ -92,7 +102,7 @@ class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
 
         $script = <<<SCRIPT
         <script src="//cdn.bootcss.com/layer/3.1.0/layer.js"></script>
-    <script>
+        <script>
          $(document).ready(function(){
             
             var html = '<li><a id="make-change" href="#">移动</a></li>';
@@ -179,7 +189,7 @@ class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
             });
             
         });
-    </script>
+        </script>
 SCRIPT;
         echo $script;
     }
