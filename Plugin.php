@@ -1,11 +1,11 @@
 <?php
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
- * 批量更改文章分类
+ * 批量更改文章分类、状态（显示|隐藏）
  *
  * @package PostsCategoryChange
  * @author Fuzqing
- * @version 0.0.1
+ * @version 0.0.2
  * @link https://huangweitong.com
  */
 class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
@@ -14,8 +14,7 @@ class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
      * 插件版本号
      * @var string
      */
-    const _VERSION = '0.0.1';
-    
+    const _VERSION = '0.0.2';
     /**
      * 激活插件方法,如果激活失败,直接抛出异常
      *
@@ -75,9 +74,10 @@ class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
         $options = Typecho_Widget::widget('Widget_Options');
 
         $category_list = $db->fetchAll($db->select()->from($prefix.'metas')->where('type = ?', 'category'));
-
-
+        //批量更改文章分类接收的action地址
         $makeChange_url = Typecho_Common::url('/index.php/action/imanage-posts?do=change-category', $options->siteUrl);
+        //批量更改文章分类接收的action地址
+        $changeStatus_url = Typecho_Common::url('/index.php/action/imanage-posts?do=change-status', $options->siteUrl);
 
         $category_html = '<select name="icategory" id="category" style="width: 100%">';
 
@@ -95,10 +95,12 @@ class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
     <script>
          $(document).ready(function(){
             
-            var html = '<li><a id="make-change" href="#">移动</a></li>'; 
+            var html = '<li><a id="make-change" href="#">移动</a></li>';
+            
+            html += '<li><a id="change-status" href="#">显示|隐藏</a></li>';
             
             $(".dropdown-menu").append(html);
-                        
+            
             $("#make-change").click(function() {
                 
                 var params = $("form[name='manage_posts']").serialize();
@@ -153,9 +155,33 @@ class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
                     
                 }
             });
+            
+            $("#change-status").click(function() {
+                var params = $("form[name='manage_posts']").serialize();
+                if(!params) {
+                    layer.msg('至少选择一篇文章', function(){});
+                    return false;
+                } else {
+                    var load_index = layer.load(2, {time: 10*1000});
+                    $.post("{$changeStatus_url}", params,function(data) {
+                        layer.close(load_index);
+                        if(data.code== -1) {
+                            layer.msg(data.msg, function(){});
+                        } else if(data.code == 1) {
+                            layer.msg(data.msg, function() {
+                                window.location.reload();
+                            });
+                        } else {
+                            console.log(data);
+                        }
+                    },"json");
+                }
+            });
+            
         });
     </script>
 SCRIPT;
         echo $script;
     }
+    
 }
