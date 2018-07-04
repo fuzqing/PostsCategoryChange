@@ -72,7 +72,7 @@ class PostsCategoryChange_Plugin implements Typecho_Plugin_Interface
         
         $filename = substr( $url , strrpos($url , '/')+1);
         
-        if (empty($filename) || strpos("manage-posts.php", $filename) === false) {
+        if (empty($filename) || strpos($filename, 'manage-posts.php') === false) {
             
             return;
         }
